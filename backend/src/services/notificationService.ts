@@ -1,5 +1,4 @@
 import { supabase } from '../config/supabase';
-
 type NotificationType =
   | 'new_student_request'
   | 'request_approved_by_admin'
@@ -27,6 +26,7 @@ export const notificationService = {
       body,
       metadata: metadata || null,
     }).select().single();
+
 
     return data;
   },
