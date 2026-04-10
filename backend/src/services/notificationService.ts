@@ -1,5 +1,4 @@
 import { supabase } from '../config/supabase';
-import { emailService } from './emailService';
 
 type NotificationType =
   | 'new_student_request'
@@ -28,21 +27,6 @@ export const notificationService = {
       body,
       metadata: metadata || null,
     }).select().single();
-
-    // For high-priority notifications, also send email
-    const emailTriggers: NotificationType[] = [
-      'upload_request_decision',
-      'moderator_request_decision',
-      'moderator_added'
-    ];
-
-    if (emailTriggers.includes(type)) {
-      const { data: profile } = await supabase
-        .from('profiles').select('email, full_name').eq('id', userId).single();
-      if (profile?.email) {
-        await emailService.sendNotificationEmail(profile.email, profile.full_name, title, body);
-      }
-    }
 
     return data;
   },
